@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCaseMapper">
+    
+    <resultMap type="SysCase" id="SysCaseResult">
+        <result property="caseId"    column="case_id"    />
+        <result property="interfaceId"    column="interface_id"    />
+        <result property="busisystemCode"    column="busiSystem_code"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="caseName"    column="case_name"    />
+        <result property="value"    column="value"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysCaseVo">
+        select case_id, interface_id, busiSystem_code, code, name, value, case_name,remark from sys_caseDetail
+    </sql>
+
+    <select id="selectSysCaseList" parameterType="SysCase" resultMap="SysCaseResult">
+        <include refid="selectSysCaseVo"/>
+        <where>
+            <if test="interfaceId != null "> and interface_id = #{interfaceId}</if>
+            <if test="busisystemCode != null "> and busiSystem_code = #{busisystemCode}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and `name` like concat('%', #{name}, '%')</if>
+            <if test="value != null  and value != ''"> and `value` = #{value}</if>
+            <if test="caseName != null  and caseName != ''"> and `case_name` = #{caseName}</if>
+
+        </where>
+    </select>
+
+    <select id="selectSysCaseNameList" parameterType="SysCase" resultMap="SysCaseResult">
+        <include refid="selectSysCaseVo"/>
+        <where>
+            <if test="caseName != null "> and case_name = #{caseName}</if>
+
+        </where>
+    </select>
+
+    <select id="sendCaseByCaseName" parameterType="SysCase" resultMap="SysCaseResult">
+        select `code`,`value`,interface_id from sys_caseDetail where case_name = #{caseName}
+    </select>
+
+    <select id="selectSysCaseByCaseId" parameterType="Long" resultMap="SysCaseResult">
+        <include refid="selectSysCaseVo"/>
+        where case_id = #{caseId}
+    </select>
+        
+    <insert id="insertSysCase" parameterType="SysCase" useGeneratedKeys="true" keyProperty="caseId">
+        insert into sys_caseDetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="interfaceId != null">interface_id,</if>
+            <if test="busisystemCode != null">busiSystem_code,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">`name`,</if>
+            <if test="value != null">`value`,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="interfaceId != null">#{interfaceId},</if>
+            <if test="busisystemCode != null">#{busisystemCode},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="value != null">#{value},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysCase" parameterType="SysCase">
+        update sys_caseDetail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="interfaceId != null">interface_id = #{interfaceId},</if>
+            <if test="busisystemCode != null">busiSystem_code = #{busisystemCode},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="value != null">`value` = #{value},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where case_id = #{caseId}
+    </update>
+
+    <delete id="deleteSysCaseByCaseId" parameterType="Long">
+        delete from sys_caseDetail where case_id = #{caseId}
+    </delete>
+
+    <delete id="deleteSysCaseByCaseIds" parameterType="String">
+        delete from sys_caseDetail where case_id in
+        <foreach item="caseId" collection="array" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

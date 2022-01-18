@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('接口树表列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>业务系统名称：</label>
+                                <input type="text" name="busiSystemName"/>
+                            </li>
+                            <li>
+                                <label>接口名称：</label>
+                                <input type="text" name="interfaceName"/>
+                            </li>
+                            <li>
+                                <label>交易码：</label>
+                                <input type="text" name="transCode"/>
+                            </li>
+                            <li>
+                                <label>接口环境：</label>
+                                <input type="text" name="interfaceEnv"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:interface:add">
+                    <i class="fa fa-plus"></i> 新增
+                </a>
+                <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="system:interface:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var addFlag = [[${@permission.hasPermi('system:interface:add')}]];
+        var editFlag = [[${@permission.hasPermi('system:interface:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:interface:remove')}]];
+        var prefix = ctx + "system/interface";
+
+        $(function() {
+            var options = {
+                code: "interfaceId",
+                parentCode: "busiSystemId",
+                // expandColumn: "3",
+                uniqueId: "interfaceId",
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "接口树表",
+                columns: [{
+                    field: 'selectItem',
+                    radio: true
+                },
+                {
+                    field: 'busiSystemName',
+                    title: '业务系统名称',
+                    align: 'left'
+                },
+                {
+                    field: 'interfaceName',
+                    title: '接口名称',
+                    align: 'left'
+                },
+                {
+                    field: 'transCode',
+                    title: '交易码',
+                    align: 'left'
+                },
+                {
+                    field: 'messageType',
+                    title: '报文类型',
+                    align: 'left'
+                },
+                    {
+                        field: 'linkType',
+                        title: '链接类型',
+                        align: 'left'
+                    },
+                    {
+                        field: 'connectType',
+                        title: '链接类型',
+                        align: 'left'
+                    },
+
+                {
+                    field: 'remark',
+                    title: '备注',
+                    align: 'left'
+                },
+                {
+                    field: 'interfaceEnv',
+                    title: '接口环境',
+                    align: 'left'
+                },
+
+                {
+                    title: '操作',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.interfaceId + '\')"><i class="fa fa-edit"></i>编辑接口信息</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.interfaceId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+    </script>
+</body>
+</html>

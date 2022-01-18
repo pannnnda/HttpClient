@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增接口树表')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-interface-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">业务系统ID：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="busiSystemId" type="hidden" th:value="${sysInterface?.interfaceId}"/>
+                        <input class="form-control" type="text" onclick="selectInterfaceTree()" id="treeName" readonly="true" th:value="${sysInterface?.interfaceName}">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">业务系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="busiSystemName" id="busiSystemNameId" class="form-control" type="text" >
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">接口名称：</label>
+                <div class="col-sm-8">
+                    <input name="interfaceName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">交易码：</label>
+                <div class="col-sm-8">
+                    <input name="transCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">通讯类型：</label>
+                <div class="col-sm-8">
+                    <select id="linkType" name="linkType" class="form-control" th:with="type=${@dict.getType('linkType')}">
+                        <option value="">请选择通讯类型：</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">链接类型：</label>
+                <div class="col-sm-8">
+                    <input name="connectType" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">报文类型：</label>
+                <div class="col-sm-8">
+                    <select name="messageType" class="form-control" th:with="type=${@dict.getType('messageType')}">
+                    <option value="">请选择报文类型：</option>
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">接口环境：</label>
+                <div class="col-sm-8">
+                    <input name="interfaceEnv" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/interface"
+        $("#form-interface-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-interface-add').serialize());
+            }
+        }
+
+        /*接口树表-新增-选择父接口树表树*/
+        function selectInterfaceTree() {
+            var options = {
+                title: '接口树表选择',
+                width: "380",
+                url: prefix + "/selectInterfaceTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var body = $.modal.getChildFrame(index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            $("#busiSystemNameId").val(body.find('#treeName').val());
+            $.modal.close(index);
+        }
+
+    </script>
+</body>
+</html>

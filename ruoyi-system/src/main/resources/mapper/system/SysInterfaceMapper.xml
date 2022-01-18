@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInterfaceMapper">
+    
+    <resultMap type="SysInterface" id="SysInterfaceResult">
+        <result property="interfaceId"    column="interfaceId"    />
+        <result property="busiSystemId"    column="busiSystemId"    />
+        <result property="busiSystemName"    column="busiSystemName"    />
+        <result property="interfaceName"    column="interfaceName"    />
+        <result property="transCode"    column="transCode"    />
+        <result property="linkType"    column="linkType"    />
+        <result property="messageType"    column="messageType"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateBy"    column="updateBy"    />
+        <result property="updateTime"    column="updateTime"    />
+        <result property="remark"    column="remark"    />
+        <result property="interfaceEnv"    column="interfaceEnv"    />
+        <result property="connectType"    column="connectType"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectSysInterfaceVo">
+        select interfaceId, busiSystemId, busiSystemName, interfaceName, transCode, linkType,messageType, status, createBy, createTime, updateBy, updateTime, remark, interfaceEnv, connectType from sys_interface
+    </sql>
+
+    <select id="selectSysInterfaceList" parameterType="SysInterface" resultMap="SysInterfaceResult">
+        <include refid="selectSysInterfaceVo"/>
+        <where>  
+            <if test="busiSystemId != null  and busiSystemId != ''"> and busiSystemId = #{busiSystemId}</if>
+            <if test="busiSystemName != null  and busiSystemName != ''"> and busiSystemName like concat('%', #{busiSystemName}, '%')</if>
+            <if test="interfaceName != null  and interfaceName != ''"> and interfaceName like concat('%', #{interfaceName}, '%')</if>
+            <if test="transCode != null  and transCode != ''"> and transCode = #{transCode}</if>
+            <if test="linkType != null  and linkType != ''"> and linkType = #{linkType}</if>
+            <if test="messageType != null  and messageType != ''"> and messageType = #{messageType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+            <if test="createTime != null  and createTime != ''"> and createTime = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and updateBy = #{updateBy}</if>
+            <if test="updateTime != null  and updateTime != ''"> and updateTime = #{updateTime}</if>
+            <if test="interfaceEnv != null  and interfaceEnv != ''"> and interfaceEnv = #{interfaceEnv}</if>
+            <if test="connectType != null  and connectType != ''"> and connectType = #{connectType}</if>
+        </where>
+        order by busiSystemId
+    </select>
+    
+    <select id="selectSysInterfaceByInterfaceId" parameterType="Long" resultMap="SysInterfaceResult">
+        select t.interfaceId, t.busiSystemId, t.busiSystemName, t.interfaceName, t.transCode,t.linkType, t.messageType, t.status, t.createBy, t.createTime, t.updateBy, t.updateTime, t.remark, t.interfaceEnv, t.connectType, p.interfaceName as parent_name
+        from sys_interface t
+        left join sys_interface p on p.interfaceId = t.busiSystemId
+        where t.interfaceId = #{interfaceId}
+    </select>
+        
+    <insert id="insertSysInterface" parameterType="SysInterface" useGeneratedKeys="true" keyProperty="interfaceId">
+        insert into sys_interface
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="busiSystemId != null">busiSystemId,</if>
+            <if test="busiSystemName != null">busiSystemName,</if>
+            <if test="interfaceName != null">interfaceName,</if>
+            <if test="transCode != null">transCode,</if>
+            <if test="linkType != null">linkType,</if>
+            <if test="messageType != null">messageType,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">createBy,</if>
+            createTime,
+            <if test="updateBy != null">updateBy,</if>
+            updateTime,
+            <if test="remark != null">remark,</if>
+            <if test="interfaceEnv != null">interfaceEnv,</if>
+            <if test="connectType != null">connectType,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="busiSystemId != null">#{busiSystemId},</if>
+            <if test="busiSystemName != null">#{busiSystemName},</if>
+            <if test="interfaceName != null">#{interfaceName},</if>
+            <if test="transCode != null">#{transCode},</if>
+            <if test="linkType != null">#{linkType},</if>
+            <if test="messageType != null">#{messageType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null">#{updateBy},</if>
+            sysdate(),
+            <if test="remark != null">#{remark},</if>
+            <if test="interfaceEnv != null">#{interfaceEnv},</if>
+            <if test="connectType != null">#{connectType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInterface" parameterType="SysInterface">
+        update sys_interface
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="busiSystemId != null">busiSystemId = #{busiSystemId},</if>
+            <if test="busiSystemName != null">busiSystemName = #{busiSystemName},</if>
+            <if test="interfaceName != null">interfaceName = #{interfaceName},</if>
+            <if test="transCode != null">transCode = #{transCode},</if>
+            <if test="linkType != null">linkType = #{linkType},</if>
+            <if test="messageType != null">messageType = #{messageType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">createBy = #{createBy},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateBy != null">updateBy = #{updateBy},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="interfaceEnv != null">interfaceEnv = #{interfaceEnv},</if>
+            <if test="connectType != null">connectType = #{connectType},</if>
+        </trim>
+        where interfaceId = #{interfaceId}
+    </update>
+
+    <delete id="deleteSysInterfaceByInterfaceId" parameterType="Long">
+        delete from sys_interface where interfaceId = #{interfaceId}
+    </delete>
+
+    <delete id="deleteSysInterfaceByInterfaceIds" parameterType="String">
+        delete from sys_interface where interfaceId in 
+        <foreach item="interfaceId" collection="array" open="(" separator="," close=")">
+            #{interfaceId}
+        </foreach>
+    </delete>
+
+</mapper>

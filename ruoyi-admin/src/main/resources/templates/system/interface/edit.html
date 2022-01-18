@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改接口树表')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-interface-edit" th:object="${sysInterface}">
+            <input name="interfaceId" th:field="*{interfaceId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">业务系统ID：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="busiSystemId" type="hidden" th:field="*{busiSystemId}" />
+                        <input class="form-control" type="text" onclick="selectInterfaceTree()" id="treeName" readonly="true" th:field="*{parentName}">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">业务系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="busiSystemName" id="busiSystemNameId" th:field="*{busiSystemName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">接口名称：</label>
+                <div class="col-sm-8">
+                    <input name="interfaceName" th:field="*{interfaceName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">交易码：</label>
+                <div class="col-sm-8">
+                    <input name="transCode" th:field="*{transCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">通讯类型：</label>
+                <div class="col-sm-8">
+                    <select name="linkType" th:field="*{linkType}" class="form-control" th:with="type=${@dict.getType('linkType')}">
+                        <option value="">请选择通讯类型：</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">链接类型：</label>
+                <div class="col-sm-8">
+                    <input name="connectType" th:field="*{connectType}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">报文类型：</label>
+                <div class="col-sm-8">
+                    <select name="messageType" th:field="*{messageType}" class="form-control" th:with="type=${@dict.getType('messageType')}">
+                        <option value="">请选择报文类型：</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">接口环境：</label>
+                <div class="col-sm-8">
+                    <input name="interfaceEnv" th:field="*{interfaceEnv}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="remark" th:field="*{remark}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/interface";
+        $("#form-interface-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-interface-edit').serialize());
+            }
+        }
+
+        /*接口树表-编辑-选择父接口树表树*/
+        function selectInterfaceTree() {
+            var options = {
+                title: '接口树表选择',
+                width: "380",
+                url: prefix + "/selectInterfaceTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var body = $.modal.getChildFrame(index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            $("#busiSystemNameId").val(body.find('#treeName').val());
+            $.modal.close(index);
+        }
+    </script>
+</body>
+</html>

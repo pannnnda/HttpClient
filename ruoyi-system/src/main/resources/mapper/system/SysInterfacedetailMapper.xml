@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysInterfacedetailMapper">
+    
+    <resultMap type="SysInterfacedetail" id="SysInterfacedetailResult">
+        <result property="sysInterfacedetailId"    column="sys_interfaceDetail_id"    />
+        <result property="busiSystemCode"    column="busiSystemCode"    />
+        <result property="interfaceId"    column="interfaceId"    />
+        <result property="interfaceName"    column="interfaceName"    />
+        <result property="code"    column="code"    />
+        <result property="codeName"    column="code_name"    />
+        <result property="value"    column="value"    />
+        <result property="indexNo"    column="index_no"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysInterfacedetailVo">
+        select sys_interfaceDetail_id, busiSystemCode, interfaceId, interfaceName, code, code_name, value, index_no, remark from sys_interfacedetail
+    </sql>
+
+    <select id="selectSysInterfacedetailList" parameterType="SysInterfacedetail" resultMap="SysInterfacedetailResult">
+        <include refid="selectSysInterfacedetailVo"/>
+        <where>  
+            <if test="sysInterfacedetailId != null "> and sys_interfaceDetail_id = #{sysInterfacedetailId}</if>
+            <if test="busiSystemCode != null  and busiSystemCode != ''"> and busiSystemCode = #{busiSystemCode}</if>
+            <if test="interfaceId != null  and interfaceId != ''"> and interfaceId = #{interfaceId}</if>
+            <if test="interfaceName != null  and interfaceName != ''"> and interfaceName = #{interfaceName}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="codeName != null  and codeName != ''"> and code_name = #{codeName}</if>
+            <if test="value != null  and value != ''"> and value = #{value}</if>
+            <if test="indexNo != null  and indexNo != ''"> and index_no = #{indexNo}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInterfacedetailBySysInterfacedetailId" parameterType="Long" resultMap="SysInterfacedetailResult">
+        <include refid="selectSysInterfacedetailVo"/>
+        where sys_interfaceDetail_id = #{sysInterfacedetailId}
+    </select>
+        
+    <insert id="insertSysInterfacedetail" parameterType="SysInterfacedetail" useGeneratedKeys="true" keyProperty="sysInterfacedetailId">
+        insert into sys_interfacedetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="busiSystemCode != null">busiSystemCode,</if>
+            <if test="interfaceId != null">interfaceId,</if>
+            <if test="interfaceName != null">interfaceName,</if>
+            <if test="code != null">code,</if>
+            <if test="codeName != null">code_name,</if>
+            <if test="value != null">value,</if>
+            <if test="indexNo != null">index_no,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="busiSystemCode != null">#{busiSystemCode},</if>
+            <if test="interfaceId != null">#{interfaceId},</if>
+            <if test="interfaceName != null">#{interfaceName},</if>
+            <if test="code != null">#{code},</if>
+            <if test="codeName != null">#{codeName},</if>
+            <if test="value != null">#{value},</if>
+            <if test="indexNo != null">#{indexNo},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInterfacedetail" parameterType="SysInterfacedetail">
+        update sys_interfacedetail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="busiSystemCode != null">busiSystemCode = #{busiSystemCode},</if>
+            <if test="interfaceId != null">interfaceId = #{interfaceId},</if>
+            <if test="interfaceName != null">interfaceName = #{interfaceName},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="codeName != null">code_name = #{codeName},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="indexNo != null">index_no = #{indexNo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sys_interfaceDetail_id = #{sysInterfacedetailId}
+    </update>
+
+    <delete id="deleteSysInterfacedetailBySysInterfacedetailId" parameterType="Long">
+        delete from sys_interfacedetail where sys_interfaceDetail_id = #{sysInterfacedetailId}
+    </delete>
+
+    <delete id="deleteSysInterfacedetailBySysInterfacedetailIds" parameterType="String">
+        delete from sys_interfacedetail where sys_interfaceDetail_id in 
+        <foreach item="sysInterfacedetailId" collection="array" open="(" separator="," close=")">
+            #{sysInterfacedetailId}
+        </foreach>
+    </delete>
+
+</mapper>
